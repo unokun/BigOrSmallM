@@ -7,9 +7,20 @@ import org.apache.logging.log4j.Logger;
 
 public class BigOrSmall {
 	private static final Logger LOGGER = LogManager.getLogger(BigOrSmall.class);
+	// 連続勝負可能最大数
+	private static final int MAX_CONSECUTIVE = 8;
 
 	Dealer dealer;
 	Player player;
+	
+	// 比較する2枚のカード
+	// cardAが最初に引くカード。
+	Card cardA;
+	Card cardB;
+	
+	// 賭けているチップ
+	// 連続で賭ける場合には、このチップ数が増えていく
+	int bettingChips;
 
 	BigOrSmall() {
 		dealer = makeDealer();
@@ -54,9 +65,7 @@ public class BigOrSmall {
 	 * 勝ちましたメッセージを出力します
 	 * 
 	 * @param chip
-	 * 
 	 * @param won
-	 * 
 	 * @return
 	 */
 	void printWinMessgae(int won) {
@@ -119,12 +128,12 @@ public class BigOrSmall {
 	}
 
 	/**
-	 * bet枚数を入力する
+	 * Playerが賭けるチップ枚数を取得する
 	 * 
 	 * @param scanner
 	 * @return
 	 */
-	private int getBet() {
+	int getPlayerBet() {
 		int bet = 0;
 		while (true) {
 			println("");
@@ -147,7 +156,7 @@ public class BigOrSmall {
 	 * @param bet
 	 * @return
 	 */
-	int getChoice(Card currentCard, int bet) {
+	int getPlayerChoice(Card currentCard, int bet) {
 		println("■Big or Small選択");
 		println("現在のカード：" + currentCard.toString());
 
@@ -202,6 +211,7 @@ public class BigOrSmall {
 		}
 		return choice;
 	}
+
 	// カードを比較
 	// 勝った場合
 	// チップを更新する
@@ -221,52 +231,34 @@ public class BigOrSmall {
 	// 新しいゲームとして継続する？
 	// 継続する：カードをシャッフルしてゲーム続行
 	// 継続しない：ゲーム終了
-	void startGame() {
+	/**
+	 * 
+	 * <h3>ゲームの終了条件</h3>
+	 * <ul>
+	 * <li>チップがなくなった時</li>
+	 * <li>ユーザーが新しいゲームをしないと選択した時</li>
+	 * </ul>
+	 */
+	void playGame() {
 		LOGGER.info("start game");
 
 		while (player.hasChip()) {
 			dealer.shuffleTrump();
 
-			Card cardA = dealer.drawCard();
+			cardA = dealer.drawCard();
 			LOGGER.info("cardA: " + cardA);
 			printCardAndChipStatus(cardA);
 
+			// 賭けられているチップ枚数
+			// 最初はPlayerが選択する
+			bettingChips = getPlayerBet();
+
 			int consecutiveWin = 0;
-			while (consecutiveWin < 8) {
-
-				// Playerの選択
-				int bet = getBet();
-				int choice = getChoice(cardA, bet);
-
-				Card cardB = dealer.drawCard();
-				LOGGER.info("cardB: " + cardB);
-
-				printCard(cardA, cardB);
-
-				boolean isBigger = compareCard(cardA, cardB);
-				if (isWin(choice, isBigger)) {
-					int won = bet * 2;
-					player.addChip(won);
-
-					printWinMessgae(won);
-					LOGGER.info("win: " + won + " chip = " + player.getChipCount());
-
-					// 勝ったチップを使ってゲームを継続する
-					if (!continueGame(won)) {
-						// 連続勝負ループを抜ける
-						break;
-					}
-					LOGGER.info("continue the game.");
-					bet = won;
-					cardA = cardB;
-					consecutiveWin += 1;
-				} else {
-					println("Lose...");
-					LOGGER.info("lose: " + bet + " chip = " + player.getChipCount());
-					
-					// 連続勝負ループを抜ける
+			while (consecutiveWin < MAX_CONSECUTIVE) {
+				if (!playTurn((consecutiveWin == (MAX_CONSECUTIVE - 1)))) {
 					break;
 				}
+				consecutiveWin += 1;
 			}
 
 			printChipStatus();
@@ -280,10 +272,48 @@ public class BigOrSmall {
 		println("チップがなくなりました");
 
 	}
+	/**
+	 * 
+	 * @param lastTurn 連続勝負の最後かどうか？
+	 * @return
+	 */
+	boolean playTurn(boolean lastTurn) {
+		// Playerの選択
+		int choice = getPlayerChoice(cardA, bettingChips);
+
+		cardB = dealer.drawCard();
+		LOGGER.info("cardB: " + cardB);
+
+		printCard(cardA, cardB);
+
+		boolean isBigger = compareCard(cardA, cardB);
+		if (isWin(choice, isBigger)) {
+			int won = bettingChips * 2;
+
+			printWinMessgae(won);
+			LOGGER.info("win: " + won + " chip = " + player.getChipCount());
+
+			// 勝ったチップを使ってゲームを継続する
+			if (lastTurn || !continueGame(won)) {
+				// 場にあるチップをもらって、連続勝負ループを抜ける
+				player.addChip(won);
+				return false;
+			}
+			LOGGER.info("continue the game.");
+			bettingChips = won;
+			cardA = cardB;
+			return true;
+		}
+
+		println("Lose...");
+		LOGGER.info("lose: " + bettingChips + " chip = " + player.getChipCount());
+
+		return false;
+	}
 
 	public static void main(String[] args) {
 		BigOrSmall game = new BigOrSmall();
-		game.startGame();
+		game.playGame();
 		game.println("END");
 	}
 }
