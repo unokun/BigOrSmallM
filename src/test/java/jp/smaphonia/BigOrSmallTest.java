@@ -25,40 +25,7 @@ public class BigOrSmallTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void testGetChoiceBig() {
-		try {
 
-			try (InputStream in = new ByteArrayInputStream("0".getBytes()); Scanner scanner = new Scanner(in)) {
-				BigOrSmall game = spy(new BigOrSmall());
-				doReturn(in).when(game).getInputStream();
-				Card currentCard = Card.createCard(4);
-				int choice = game.getChoice(scanner, currentCard, 1);
-
-//				assertEquals(BigOrSmall.CHOICE_BIG, choice);
-				assertThat(choice).isEqualTo(BigOrSmall.CHOICE_BIG);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testGetChoiceSmall() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("1".getBytes()); Scanner scanner = new Scanner(in)) {
-				BigOrSmall game = spy(new BigOrSmall());
-				doReturn(in).when(game).getInputStream();
-				Card currentCard = Card.createCard(4);
-				int choice = game.getChoice(scanner, currentCard, 1);
-
-//				assertEquals(BigOrSmall.CHOICE_SMALL, choice);
-				assertThat(choice).isEqualTo(BigOrSmall.CHOICE_SMALL);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
 
 	@Test
 	public void testPrint() {
