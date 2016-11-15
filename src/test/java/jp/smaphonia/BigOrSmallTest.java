@@ -36,7 +36,20 @@ public class BigOrSmallTest {
 	@Test
 	public void testRandomPlayGame() {
 		try {
-			RandomChoicePlayer player = new RandomChoicePlayer();
+			Player player = new RandomChoicePlayer();
+			player.init();
+			game.player = player;
+			
+			game.playGame();
+		} catch (Exception e) {
+			fail();
+
+		}
+	}
+	@Test
+	public void testSmarterRandomPlayGame() {
+		try {
+			Player player = new SmarterRandomChoicePlayer();
 			player.init();
 			game.player = player;
 			

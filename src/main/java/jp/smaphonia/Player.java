@@ -16,7 +16,7 @@ public interface Player {
 	
 	public void init();
 	
-	public int makeChoice();
+	public int makeChoice(Card card);
 	public int willContinueGame();
 	public int willPlayNewGame();
 	

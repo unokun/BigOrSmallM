@@ -25,7 +25,7 @@ public class InteractivePlayer extends AbstractPlayer {
 	}
 
 	@Override
-	String getBigSmallChoice() {
+	String getBigSmallChoice(Card card) {
 		return getFromStandardInput();
 		
 	}

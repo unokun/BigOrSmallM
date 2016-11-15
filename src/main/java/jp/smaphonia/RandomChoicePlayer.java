@@ -3,7 +3,7 @@ package jp.smaphonia;
 public class RandomChoicePlayer extends AbstractPlayer {
 
 	@Override
-	String getBigSmallChoice() {
+	String getBigSmallChoice(Card card) {
 		return String.valueOf((int)(Math.random() * 2));
 	}
 

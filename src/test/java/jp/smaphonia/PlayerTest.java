@@ -33,7 +33,8 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_BIG);
 			}
@@ -49,7 +50,8 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_SMALL);
 			}
@@ -65,7 +67,8 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
@@ -81,7 +84,8 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
@@ -177,7 +181,7 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_YES);
 			}
@@ -193,7 +197,7 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_NO);
 			}
@@ -209,7 +213,7 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
@@ -225,7 +229,7 @@ public class PlayerTest {
 				doReturn(in).when(player).getInputStream();
 
 				player.init();
-				int choice = player.makeChoice();
+				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
 				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}

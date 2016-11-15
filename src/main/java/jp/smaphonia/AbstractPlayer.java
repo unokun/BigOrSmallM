@@ -15,9 +15,9 @@ public abstract class AbstractPlayer implements Player {
 	}
 
 	@Override
-	public int makeChoice() {
+	public int makeChoice(Card card) {
 		try {
-			int choice = Integer.parseInt(getBigSmallChoice());
+			int choice = Integer.parseInt(getBigSmallChoice(card));
 			if (choice != CHOICE_BIG && choice != CHOICE_SMALL) {
 				return CHOICE_INVALID;
 			}
@@ -27,7 +27,7 @@ public abstract class AbstractPlayer implements Player {
 		}
 	}
 	
-	abstract String getBigSmallChoice();
+	abstract String getBigSmallChoice(Card card);
 
 	@Override
 	public int willContinueGame() {

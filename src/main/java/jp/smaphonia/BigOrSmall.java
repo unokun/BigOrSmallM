@@ -138,17 +138,17 @@ public class BigOrSmall {
 	/**
 	 * カードの大小を比較します
 	 * 
-	 * @param currentCard
-	 * @param drawnCard
+	 * @param cardA
+	 * @param cardB
 	 * @return
 	 */
-	boolean compareCard(Card currentCard, Card drawnCard) {
-		boolean isBigger = drawnCard.isBiggerThan(currentCard);
+	boolean compareCard(Card cardA, Card cardB) {
+		boolean isBigger = cardA.isBiggerThan(cardB);
 		if (isBigger) {
-			println(currentCard.toString() + "は" + drawnCard.toString() + "よりSmall");
+			println(cardA.toString() + "は" + cardB.toString() + "よりBig");
 
 		} else {
-			println(currentCard.toString() + "は" + drawnCard.toString() + "よりBig");
+			println(cardA.toString() + "は" + cardB.toString() + "よりSmall");
 
 		}
 		println("************************");
