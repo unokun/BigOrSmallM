@@ -13,14 +13,39 @@ public class BigOrSmall {
 	Dealer dealer;
 	Player player;
 	
+	// 賭けているチップ
+	// 連続で賭ける場合には、このチップ数が増えていく
+	int bettingChips;
+	
 	// 比較する2枚のカード
 	// cardAが最初に引くカード。
 	Card cardA;
 	Card cardB;
 	
-	// 賭けているチップ
-	// 連続で賭ける場合には、このチップ数が増えていく
-	int bettingChips;
+	public Card getCardA() {
+		return cardA;
+	}
+
+	public void setCardA(Card cardA) {
+		this.cardA = cardA;
+	}
+
+	public Card getCardB() {
+		return cardB;
+	}
+
+	public void setCardB(Card cardB) {
+		this.cardB = cardB;
+	}
+
+	public int getBettingChips() {
+		return bettingChips;
+	}
+
+	public void setBettingChips(int bettingChips) {
+		this.bettingChips = bettingChips;
+	}
+
 
 	BigOrSmall() {
 		dealer = makeDealer();
@@ -55,9 +80,12 @@ public class BigOrSmall {
 		getPrintStream().print(message);
 	}
 
-	void printCard(Card currentCard, Card drawnCard) {
-		println("現在のカード：" + currentCard);
-		println("引いたカード：" + drawnCard);
+	/**
+	 * カードの内容を出力する
+	 */
+	void printCards() {
+		println("現在のカード：" + getCardA());
+		println("引いたカード：" + getCardB());
 
 	}
 
@@ -156,14 +184,14 @@ public class BigOrSmall {
 	 * @param bet
 	 * @return
 	 */
-	int getPlayerChoice(Card currentCard, int bet) {
+	int getPlayerChoice() {
 		println("■Big or Small選択");
-		println("現在のカード：" + currentCard.toString());
+		println("現在のカード：" + getCardA());
 
 		int choice = getYesNoChoice("[Big or Small]: 0: Big 1:Small");
 
 		println("*****Big or Small*****");
-		println("BET数：" + bet);
+		println("BET数：" + getBettingChips());
 		print("あなたの選択：");
 		if (choice == Player.CHOICE_BIG) {
 			print("Big");
@@ -193,7 +221,7 @@ public class BigOrSmall {
 	 * @param scanner
 	 * @return
 	 */
-	private boolean playNewGame() {
+	boolean playNewGame() {
 		int choice = getYesNoChoice("[ゲームを続けますか？]: 0: Yes 1:No");
 		return (choice == Player.CHOICE_YES);
 	}
@@ -245,13 +273,16 @@ public class BigOrSmall {
 		while (player.hasChip()) {
 			dealer.shuffleTrump();
 
-			cardA = dealer.drawCard();
-			LOGGER.info("cardA: " + cardA);
+			Card cardA = dealer.drawCard();
 			printCardAndChipStatus(cardA);
+			setCardA(cardA);
+			LOGGER.info("draw cardA: " + cardA);
 
 			// 賭けられているチップ枚数
 			// 最初はPlayerが選択する
-			bettingChips = getPlayerBet();
+			int bet = getPlayerBet();
+			setBettingChips(bet);
+			LOGGER.info("bet: " + bet);
 
 			int consecutiveWin = 0;
 			while (consecutiveWin < MAX_CONSECUTIVE) {
@@ -273,40 +304,47 @@ public class BigOrSmall {
 
 	}
 	/**
-	 * 
+	 * 1回の勝負
+	 *  
 	 * @param lastTurn 連続勝負の最後かどうか？
 	 * @return
 	 */
 	boolean playTurn(boolean lastTurn) {
 		// Playerの選択
-		int choice = getPlayerChoice(cardA, bettingChips);
+		int choice = getPlayerChoice();
 
-		cardB = dealer.drawCard();
-		LOGGER.info("cardB: " + cardB);
+		Card cardA = getCardA();
+		Card cardB = dealer.drawCard();
+		setCardB(cardB);
+		LOGGER.info("draw cardB: " + cardB);
 
-		printCard(cardA, cardB);
+		printCards();
 
 		boolean isBigger = compareCard(cardA, cardB);
 		if (isWin(choice, isBigger)) {
-			int won = bettingChips * 2;
+			int won = getBettingChips() * 2;
 
 			printWinMessgae(won);
 			LOGGER.info("win: " + won + " chip = " + player.getChipCount());
 
 			// 勝ったチップを使ってゲームを継続する
+			// 連続勝負最大数になっている場合には継続できない
 			if (lastTurn || !continueGame(won)) {
-				// 場にあるチップをもらって、連続勝負ループを抜ける
+				// 継続しない場合、場にあるチップをもらって、連続勝負ループを抜ける
 				player.addChip(won);
 				return false;
 			}
 			LOGGER.info("continue the game.");
-			bettingChips = won;
-			cardA = cardB;
+			setBettingChips(won);
+			
+			// カードBをカードAとする
+			setCardA(cardB);
+			
 			return true;
 		}
 
 		println("Lose...");
-		LOGGER.info("lose: " + bettingChips + " chip = " + player.getChipCount());
+		LOGGER.info("lose: " + getBettingChips() + " chip = " + player.getChipCount());
 
 		return false;
 	}

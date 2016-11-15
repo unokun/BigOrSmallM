@@ -99,11 +99,18 @@ public class Card {
 	 * 
 	 * @return　カードクラス
 	 */
-	public static Card createCard(int value) {
+	static Card createCard(int value) {
 		int suits = value % 4;
 		int number = value / 4;
 
 		return new Card(createCardType(suits), number);
+	}
+	
+	static Card createCard(Card.Suit cardType, int number) {
+		if (number < 0) {
+			throw new IllegalArgumentException("invalid number");
+		}
+		return new Card(cardType, number - 1);
 	}
 	
 	private static Card.Suit createCardType(int id) {
