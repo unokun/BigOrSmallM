@@ -15,10 +15,10 @@ import static org.mockito.Mockito.spy;
 
 public class PlayerTest {
 
-	Player player;
+	InteractivePlayer player;
 	@Before
 	public void setUp() throws Exception {
-		player = spy(new Player());
+		player = spy(new InteractivePlayer());
 	}
 
 	@After
@@ -35,7 +35,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_BIG);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_BIG);
 			}
 		} catch (Exception e) {
 			fail();
@@ -51,7 +51,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_SMALL);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_SMALL);
 			}
 		} catch (Exception e) {
 			fail();
@@ -67,7 +67,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_INVALID);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -83,7 +83,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_INVALID);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -131,7 +131,7 @@ public class PlayerTest {
 				player.init();
 				int bet = player.betChip();
 
-				assertThat(bet).isEqualTo(Player.BET_INVALID);
+				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -147,7 +147,7 @@ public class PlayerTest {
 				player.init();
 				int bet = player.betChip();
 
-				assertThat(bet).isEqualTo(Player.BET_INVALID);
+				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -163,7 +163,7 @@ public class PlayerTest {
 				player.init();
 				int bet = player.betChip();
 
-				assertThat(bet).isEqualTo(Player.BET_INVALID);
+				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -179,7 +179,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_YES);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_YES);
 			}
 		} catch (Exception e) {
 			fail();
@@ -195,7 +195,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_NO);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_NO);
 			}
 		} catch (Exception e) {
 			fail();
@@ -211,7 +211,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_INVALID);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
 		} catch (Exception e) {
 			fail();
@@ -227,7 +227,7 @@ public class PlayerTest {
 				player.init();
 				int choice = player.makeChoice();
 
-				assertThat(choice).isEqualTo(Player.CHOICE_INVALID);
+				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
 			}
 		} catch (Exception e) {
 			fail();

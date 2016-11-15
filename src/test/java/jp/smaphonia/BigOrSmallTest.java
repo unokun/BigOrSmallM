@@ -39,7 +39,7 @@ public class BigOrSmallTest {
 		try {
 			try (ByteArrayOutputStream bas = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(bas)) {
 				doReturn(ps).when(game).getPrintStream();
-				Player player = spy(new Player());
+				InteractivePlayer player = spy(new InteractivePlayer());
 				player.init();
 				doReturn(false).when(player).hasChip();
 				game.player = player;
@@ -134,7 +134,7 @@ public class BigOrSmallTest {
 
 			// 大きいという選択
 			// 継続無し
-			doReturn(Player.CHOICE_BIG).when(game).getPlayerChoice();
+			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
 			doReturn(false).when(game).continueGame(anyInt());
 
 			boolean result = game.playTurn(false);
@@ -171,7 +171,7 @@ public class BigOrSmallTest {
 
 			// 大きいという選択
 			// 継続
-			doReturn(Player.CHOICE_BIG).when(game).getPlayerChoice();
+			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
 			doReturn(true).when(game).continueGame(anyInt());
 
 			boolean result = game.playTurn(false);
@@ -207,7 +207,7 @@ public class BigOrSmallTest {
 			doReturn(cardB).when(game.dealer).drawCard();
 
 			// 大きいという選択
-			doReturn(Player.CHOICE_BIG).when(game).getPlayerChoice();
+			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
 
 			boolean result = game.playTurn(true);
 			assertThat(result).isEqualTo(false);

@@ -57,8 +57,8 @@ public class BigOrSmall {
 		return new Dealer();
 	}
 
-	Player makePlayer() {
-		Player player = new Player();
+	InteractivePlayer makePlayer() {
+		InteractivePlayer player = new InteractivePlayer();
 		player.init();
 		return player;
 	}
@@ -103,14 +103,14 @@ public class BigOrSmall {
 
 	void printChipStatus() {
 		println("*****現在のチップ枚数*****");
-		println(player.printChipStatus());
+		println(player.getChip().toString());
 		println("************************");
 
 	}
 
 	void printCardAndChipStatus(Card card) {
 		println("*****チップ枚数とカード*****");
-		println(player.printChipStatus());
+		println(player.getChip().toString());
 		println("現在のカード：" + card);
 		println("************************");
 
@@ -126,10 +126,10 @@ public class BigOrSmall {
 	 * @return
 	 */
 	boolean isWin(int choice, boolean actual) {
-		if (choice == Player.CHOICE_BIG && actual) {
+		if (choice == InteractivePlayer.CHOICE_BIG && actual) {
 			return true;
 		}
-		if (choice == Player.CHOICE_SMALL && !actual) {
+		if (choice == InteractivePlayer.CHOICE_SMALL && !actual) {
 			return true;
 		}
 		return false;
@@ -168,7 +168,7 @@ public class BigOrSmall {
 			println("■BET枚数選択");
 			println("BETするチップ数を入力してください(最低1〜20枚)");
 			bet = player.betChip();
-			if (bet == Player.BET_INVALID) {
+			if (bet == InteractivePlayer.BET_INVALID) {
 				continue;
 			}
 			return bet;
@@ -193,7 +193,7 @@ public class BigOrSmall {
 		println("*****Big or Small*****");
 		println("BET数：" + getBettingChips());
 		print("あなたの選択：");
-		if (choice == Player.CHOICE_BIG) {
+		if (choice == InteractivePlayer.CHOICE_BIG) {
 			print("Big");
 		} else {
 			print("Small");
@@ -211,7 +211,7 @@ public class BigOrSmall {
 	 */
 	boolean continueGame(int won) {
 		int choice = getYesNoChoice("[獲得したチップ" + won + "枚でBig or Smallを続けますか？]: 0: Yes 1:No");
-		return (choice == Player.CHOICE_YES);
+		return (choice == InteractivePlayer.CHOICE_YES);
 	}
 
 	/**
@@ -223,15 +223,15 @@ public class BigOrSmall {
 	 */
 	boolean playNewGame() {
 		int choice = getYesNoChoice("[ゲームを続けますか？]: 0: Yes 1:No");
-		return (choice == Player.CHOICE_YES);
+		return (choice == InteractivePlayer.CHOICE_YES);
 	}
 
 	private int getYesNoChoice(String question) {
-		int choice = Player.CHOICE_INVALID;
+		int choice = InteractivePlayer.CHOICE_INVALID;
 		while (true) {
 			println(question);
 			choice = player.willPlayNewGame();
-			if (choice != Player.CHOICE_INVALID) {
+			if (choice != InteractivePlayer.CHOICE_INVALID) {
 				break;
 			}
 			println("半角数字の0か1のみを入力してください");
