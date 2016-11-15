@@ -34,6 +34,20 @@ public class BigOrSmallTest {
 	}
 
 	@Test
+	public void testRandomPlayGame() {
+		try {
+			RandomChoicePlayer player = new RandomChoicePlayer();
+			player.init();
+			game.player = player;
+			
+			game.playGame();
+		} catch (Exception e) {
+			fail();
+
+		}
+	}
+	
+	@Test
 	// チップがなくなって終了
 	public void testPlayGame() {
 		try {
