@@ -4,11 +4,23 @@ import java.io.PrintStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 public class BigOrSmall {
 	private static final Logger LOGGER = LogManager.getLogger(BigOrSmall.class);
 	// 連続勝負可能最大数
 	private static final int MAX_CONSECUTIVE = 8;
+
+	@Option(name="-i", usage = "Set an interactive player[default].")
+	boolean interractivePlayer = true;
+
+	@Option(name="-rnd", usage = "Set a random player.")
+	boolean randomPlayer = false;
+
+	@Option(name="-srnd", usage = "Set a smarter random player.")
+	boolean smarterRandomPlayer = false;
 
 	Dealer dealer;
 	Player player;
@@ -47,18 +59,26 @@ public class BigOrSmall {
 	}
 
 
-	BigOrSmall() {
+	void initGame() {
 		dealer = makeDealer();
 		player = makePlayer();
-
+		
 	}
 
 	Dealer makeDealer() {
 		return new Dealer();
 	}
 
-	InteractivePlayer makePlayer() {
-		InteractivePlayer player = new InteractivePlayer();
+	Player makePlayer() {
+		Player player = null;
+		if (smarterRandomPlayer) {
+			player = new SmarterRandomChoicePlayer();
+		} else if (randomPlayer) {
+			player = new RandomChoicePlayer();
+		} else {
+			player = new InteractivePlayer();
+			
+		}
 		player.init();
 		return player;
 	}
@@ -270,6 +290,8 @@ public class BigOrSmall {
 	void playGame() {
 		LOGGER.info("start game");
 
+		initGame();
+		
 		while (player.hasChip()) {
 			dealer.shuffleTrump();
 
@@ -350,8 +372,18 @@ public class BigOrSmall {
 	}
 
 	public static void main(String[] args) {
-		BigOrSmall game = new BigOrSmall();
-		game.playGame();
-		game.println("END");
+		
+		try {
+			BigOrSmall game = new BigOrSmall();
+			CmdLineParser parser = new CmdLineParser(game);
+			parser.parseArgument(args);
+			
+			game.playGame();
+			game.println("END");
+			
+		} catch (CmdLineException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

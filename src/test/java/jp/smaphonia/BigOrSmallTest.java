@@ -38,8 +38,8 @@ public class BigOrSmallTest {
 		try {
 			Player player = new RandomChoicePlayer();
 			player.init();
-			game.player = player;
-			
+			doReturn(player).when(game).makePlayer();
+
 			game.playGame();
 		} catch (Exception e) {
 			fail();
@@ -51,7 +51,7 @@ public class BigOrSmallTest {
 		try {
 			Player player = new SmarterRandomChoicePlayer();
 			player.init();
-			game.player = player;
+			doReturn(player).when(game).makePlayer();
 			
 			game.playGame();
 		} catch (Exception e) {
@@ -69,7 +69,7 @@ public class BigOrSmallTest {
 				InteractivePlayer player = spy(new InteractivePlayer());
 				player.init();
 				doReturn(false).when(player).hasChip();
-				game.player = player;
+				doReturn(player).when(game).makePlayer();
 
 				game.playGame();
 
@@ -88,9 +88,9 @@ public class BigOrSmallTest {
 		try {
 			try (ByteArrayOutputStream bas = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(bas)) {
 				doReturn(ps).when(game).getPrintStream();
-				Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
-				game.dealer = spy(new Dealer());
-				doReturn(cardA).when(game.dealer).drawCard();
+				
+				Dealer dealer = makeDealer(Card.Suit.CLUBS, 1);
+				doReturn(dealer).when(game).makeDealer();
 
 				int bet = 10;
 				doReturn(bet).when(game).getPlayerBet();
@@ -108,15 +108,34 @@ public class BigOrSmallTest {
 			fail();
 		}
 	}
+	/**
+	 * 指定したカードを引くことができるDealerを作成する
+	 * 
+	 * @param suit
+	 * @param number
+	 * @return
+	 */
+	private Dealer makeDealer(Card.Suit suit, int number) {
+		Card card = Card.createCard(suit, number);
+		Dealer dealer = spy(new Dealer());
+		doReturn(card).when(dealer).drawCard();
+		return dealer;
+	}
+	private Dealer makeDealer(Card card) {
+		Dealer dealer = spy(new Dealer());
+		doReturn(card).when(dealer).drawCard();
+		return dealer;
+	}
+	
 	@Test
 	// playTuenでtrueを返す
 	public void testPlayGame3() {
 		try {
 			try (ByteArrayOutputStream bas = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(bas)) {
 				doReturn(ps).when(game).getPrintStream();
-				Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
-				game.dealer = spy(new Dealer());
-				doReturn(cardA).when(game.dealer).drawCard();
+				
+				Dealer dealer = makeDealer(Card.Suit.CLUBS, 1);
+				doReturn(dealer).when(game).makeDealer();
 
 				int bet = 10;
 				doReturn(bet).when(game).getPlayerBet();
@@ -146,22 +165,24 @@ public class BigOrSmallTest {
 	// Playerのチップは賭けた枚数の2倍増えている
 	public void testPlayTurnWin() {
 		try {
-			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
-
 			// 賭けているチップ数
 			int bet = 10;
 			game.setBettingChips(bet);
 
 			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
-			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
-			game.dealer = spy(new Dealer());
-			doReturn(cardB).when(game.dealer).drawCard();
 
-			// 大きいという選択
+			Dealer dealer = makeDealer(Card.Suit.CLUBS, 2);
+			doReturn(dealer).when(game).makeDealer();
+
+			game.initGame();
+
+			// 勝負前のチップ数
+			int chipOrg = game.player.getChipCount();
+
+			// 小さいという選択
 			// 継続無し
-			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
+			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
 			doReturn(false).when(game).continueGame(anyInt());
 
 			boolean result = game.playTurn(false);
@@ -182,26 +203,31 @@ public class BigOrSmallTest {
 	// 場のチップは賭けたチップの2倍の枚数
 	public void testPlayTurnWin2() {
 		try {
-			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
-
+			
 			// 賭けているチップ数
 			int bet = 10;
 			game.setBettingChips(bet);
 
 			// カード
 			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
-			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
-			game.dealer = spy(new Dealer());
-			doReturn(cardB).when(game.dealer).drawCard();
+			
+			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
+			Dealer dealer = makeDealer(cardB);
+			doReturn(dealer).when(game).makeDealer();
 
-			// 大きいという選択
+			game.initGame();
+
+			// 勝負前のチップ数
+			int chipOrg = game.player.getChipCount();
+
+			// 小さいという選択
 			// 継続
-			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
+			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
 			doReturn(true).when(game).continueGame(anyInt());
 
 			boolean result = game.playTurn(false);
+			
 			assertThat(result).isEqualTo(true);
 			assertThat(game.player.getChipCount() - chipOrg).isEqualTo(0);
 			assertThat(game.getBettingChips()).isEqualTo(2 * bet);
@@ -219,24 +245,28 @@ public class BigOrSmallTest {
 	// Playerのチップは賭けた枚数の2倍増えている
 	public void testPlayTurnWin3() {
 		try {
-			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
-
 			// 賭けているチップ数
 			int bet = 10;
 			game.setBettingChips(bet);
 
 			// カード
 			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
-			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
-			game.dealer = spy(new Dealer());
-			doReturn(cardB).when(game.dealer).drawCard();
 
-			// 大きいという選択
-			doReturn(InteractivePlayer.CHOICE_BIG).when(game).getPlayerChoice();
+			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
+			Dealer dealer = makeDealer(cardB);
+			doReturn(dealer).when(game).makeDealer();
+
+			game.initGame();
+
+			// 勝負前のチップ数
+			int chipOrg = game.player.getChipCount();
+
+			// 小さいという選択
+			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
 
 			boolean result = game.playTurn(true);
+			
 			assertThat(result).isEqualTo(false);
 			assertThat(game.player.getChipCount() - chipOrg).isEqualTo(2 * bet);
 		} catch (Exception e) {
