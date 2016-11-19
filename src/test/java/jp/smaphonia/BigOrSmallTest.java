@@ -1,7 +1,6 @@
 package jp.smaphonia;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -19,7 +18,7 @@ import org.junit.Test;
 
 public class BigOrSmallTest {
 
-	String lineSSeparator = System.getProperty("line.separator");
+	String lineSeparator = System.getProperty("line.separator");
 
 	BigOrSmall game;
 
@@ -74,7 +73,7 @@ public class BigOrSmallTest {
 				game.playGame();
 
 				byte[] bytes = bas.toByteArray();
-				String message = new String(bytes, 0, bytes.length - lineSSeparator.length());
+				String message = new String(bytes, 0, bytes.length - lineSeparator.length());
 				assertThat(message).isEqualTo("チップがなくなりました");
 			}
 		} catch (Exception e) {
@@ -83,7 +82,7 @@ public class BigOrSmallTest {
 	}
 
 	@Test
-	// playTuenでfalseを返す
+	// playTurnでfalseを返す
 	public void testPlayGame2() {
 		try {
 			try (ByteArrayOutputStream bas = new ByteArrayOutputStream(); PrintStream ps = new PrintStream(bas)) {
@@ -101,32 +100,14 @@ public class BigOrSmallTest {
 
 				assertThat(game.getBettingChips()).isEqualTo(bet);
 				byte[] bytes = bas.toByteArray();
-				String message = new String(bytes, 0, bytes.length - lineSSeparator.length());
+				String message = new String(bytes, 0, bytes.length - lineSeparator.length());
 				assertThat(message).isNotEqualTo("チップがなくなりました");
 			}
 		} catch (Exception e) {
 			fail();
 		}
 	}
-	/**
-	 * 指定したカードを引くことができるDealerを作成する
-	 * 
-	 * @param suit
-	 * @param number
-	 * @return
-	 */
-	private Dealer makeDealer(Card.Suit suit, int number) {
-		Card card = Card.createCard(suit, number);
-		Dealer dealer = spy(new Dealer());
-		doReturn(card).when(dealer).drawCard();
-		return dealer;
-	}
-	private Dealer makeDealer(Card card) {
-		Dealer dealer = spy(new Dealer());
-		doReturn(card).when(dealer).drawCard();
-		return dealer;
-	}
-	
+
 	@Test
 	// playTuenでtrueを返す
 	public void testPlayGame3() {
@@ -146,18 +127,34 @@ public class BigOrSmallTest {
 
 				assertThat(game.getBettingChips()).isEqualTo(bet);
 				
-				// playTuenが8回呼ばれると終了する
+				// playTurnが8回呼ばれると終了する
 				verify(game, times(8)).playTurn(anyBoolean());
 				
 				byte[] bytes = bas.toByteArray();
-				String message = new String(bytes, 0, bytes.length - lineSSeparator.length());
+				String message = new String(bytes, 0, bytes.length - lineSeparator.length());
 				assertThat(message).isNotEqualTo("チップがなくなりました");
 			}
 		} catch (Exception e) {
 			fail();
 		}
 	}
-
+	
+	/**
+	 * 指定したカードを引くことができるDealerを作成する
+	 * 
+	 * @param suit
+	 * @param number
+	 * @return
+	 */
+	private Dealer makeDealer(Card.Suit suit, int number) {
+		Card card = Card.createCard(suit, number);
+		return makeDealer(card);
+	}
+	private Dealer makeDealer(Card card) {
+		Dealer dealer = spy(new Dealer());
+		doReturn(card).when(dealer).drawCard();
+		return dealer;
+	}
 	@Test
 	// Win
 	// 継続無し
@@ -299,10 +296,8 @@ public class BigOrSmallTest {
 				String message = "test";
 				game.println(message);
 				byte[] bytes = bas.toByteArray();
-				String lineSSeparator = System.getProperty("line.separator");
-				assertEquals(message, new String(bytes, 0, bytes.length - lineSSeparator.length()));
-				assertEquals(new String(bytes, bytes.length - lineSSeparator.length(), lineSSeparator.length()),
-						lineSSeparator);
+				assertThat(message).isEqualTo(new String(bytes, 0, bytes.length - lineSeparator.length()));
+				assertThat(new String(bytes, bytes.length - lineSeparator.length(), lineSeparator.length())).isEqualTo(lineSeparator);
 			}
 
 		} catch (Exception e) {
