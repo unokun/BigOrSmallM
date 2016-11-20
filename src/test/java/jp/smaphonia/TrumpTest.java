@@ -62,25 +62,25 @@ public class TrumpTest {
 		}
 	}
 
-	@Test
-	public void tevst() {
-		try {
-			// @Option
-			Method method = Trump.class.getDeclaredMethod("test");
-			for (Annotation annotation : method.getAnnotations()) {
-				System.out.println(annotation);
-			}
-			
-			for (Method m : Trump.class.getMethods()) {
-				System.out.println("name: " + m.getName());
-				System.out.println("return type: " + m.getReturnType());
-				for (Parameter p : m.getParameters()) {
-					System.out.println("name: " + p.getName());
-					System.out.println("type: " + p.getType());
-				}
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
+//	@Test
+//	public void test() {
+//		try {
+//			// @Option
+//			Method method = Trump.class.getDeclaredMethod("test");
+//			for (Annotation annotation : method.getAnnotations()) {
+//				System.out.println(annotation);
+//			}
+//			
+//			for (Method m : Trump.class.getMethods()) {
+//				System.out.println("name: " + m.getName());
+//				System.out.println("return type: " + m.getReturnType());
+//				for (Parameter p : m.getParameters()) {
+//					System.out.println("name: " + p.getName());
+//					System.out.println("type: " + p.getType());
+//				}
+//			}
+//		} catch (Exception e) {
+//			fail();
+//		}
+//	}
 }

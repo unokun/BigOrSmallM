@@ -166,10 +166,10 @@ public class BigOrSmallTest {
 			int bet = 10;
 			game.setBettingChips(bet);
 
-			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
+			Card cardA = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
 
-			Dealer dealer = makeDealer(Card.Suit.CLUBS, 2);
+			Dealer dealer = makeDealer(Card.Suit.CLUBS, 1);
 			doReturn(dealer).when(game).makeDealer();
 
 			game.initGame();
@@ -206,10 +206,10 @@ public class BigOrSmallTest {
 			game.setBettingChips(bet);
 
 			// カード
-			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
+			Card cardA = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
 			
-			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
+			Card cardB = Card.createCard(Card.Suit.CLUBS, 1);
 			Dealer dealer = makeDealer(cardB);
 			doReturn(dealer).when(game).makeDealer();
 
@@ -247,10 +247,10 @@ public class BigOrSmallTest {
 			game.setBettingChips(bet);
 
 			// カード
-			Card cardA = Card.createCard(Card.Suit.CLUBS, 1);
+			Card cardA = Card.createCard(Card.Suit.CLUBS, 2);
 			game.setCardA(cardA);
 
-			Card cardB = Card.createCard(Card.Suit.CLUBS, 2);
+			Card cardB = Card.createCard(Card.Suit.CLUBS, 1);
 			Dealer dealer = makeDealer(cardB);
 			doReturn(dealer).when(game).makeDealer();
 
@@ -270,7 +270,24 @@ public class BigOrSmallTest {
 			fail();
 		}
 	}
+	@Test
+	public void testCompareCard() {
+		try {
+			Card cardA;
+			Card cardB;
+			
+			cardA = Card.createCard(Card.Suit.CLUBS, 2);
+			cardB = Card.createCard(Card.Suit.CLUBS, 1);
+			assertThat(game.compareCard(cardB, cardA)).isEqualTo(false);
 
+			cardA = Card.createCard(Card.Suit.SPADES, 1);
+			cardB = Card.createCard(Card.Suit.CLUBS, 1);
+			assertThat(game.compareCard(cardB, cardA)).isEqualTo(false);
+			
+		} catch (Exception e) {
+			fail();
+		}
+	}
 	@Test
 	public void testPrint() {
 		try {

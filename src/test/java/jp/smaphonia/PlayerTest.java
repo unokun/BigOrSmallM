@@ -53,7 +53,7 @@ public class PlayerTest {
 
 				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
 
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_SMALL);
+				assertThat(choice).isEqualTo(Player.CHOICE_SMALL);
 			}
 		} catch (Exception e) {
 			fail();
