@@ -24,8 +24,8 @@
     for (Parameter p : m.getParameters()) {
     }
   }
-
+```
 # Gradle Project
-- [Gradle使い方メモ \- Qiita](http://qiita.com/opengl-8080/items/4c1aa85b4737bd362d9e)
-- [IntelliJ\+Gradleのプロジェクト作成方法メモ \- Qiita](http://qiita.com/WK6_8B/items/77f3b49fc0b7d4c4ff27)
-- [IntelliJ IDEA 入門 \- Qiita](http://qiita.com/opengl-8080/items/108102d692b49f804dbd)
+- [Gradle使い方メモ - Qiita](http://qiita.com/opengl-8080/items/4c1aa85b4737bd362d9e)
+- [IntelliJGradleのプロジェクト作成方法メモ - Qiita](http://qiita.com/WK6_8B/items/77f3b49fc0b7d4c4ff27)
+- [IntelliJ IDEA 入門 - Qiita](http://qiita.com/opengl-8080/items/108102d692b49f804dbd)
