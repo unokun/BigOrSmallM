@@ -3,19 +3,15 @@ package jp.smaphonia;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 public class PlayerTest {
 
-	InteractivePlayer player;
+	Player player;
+	
 	@Before
 	public void setUp() throws Exception {
 		player = spy(new InteractivePlayer());
@@ -24,218 +20,58 @@ public class PlayerTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-	
+
 	@Test
-	public void testMakeChoiceBig() {
+	public void testAddChip() {
 		try {
-
-			try (InputStream in = new ByteArrayInputStream("0".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_BIG);
-			}
+			int bet;
+			bet = 10;
+			assertThat(player.countChip()).isEqualTo(Player.INIT_CHIP_COUNT);
+			player.addChip(bet);
+			assertThat(player.countChip()).isEqualTo(Player.INIT_CHIP_COUNT + bet);
+			
+			// チップ数はマイナスにならない
+			bet = -2 * Player.INIT_CHIP_COUNT;
+			player.addChip(bet);
+			assertThat(player.countChip()).isEqualTo(0);
 		} catch (Exception e) {
 			fail();
 		}
 	}
 	@Test
-	public void testMakeChoiceSmall() {
+	public void testHasChip() {
 		try {
+			assertThat(player.countChip()).isEqualTo(Player.INIT_CHIP_COUNT);
+			assertThat(player.hasChip()).isEqualTo(true);
 
-			try (InputStream in = new ByteArrayInputStream("1".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(Player.CHOICE_SMALL);
-			}
+			int bet = -Player.INIT_CHIP_COUNT;
+			player.addChip(bet);
+			assertThat(player.countChip()).isEqualTo(0);
+			assertThat(player.hasChip()).isEqualTo(false);
+			
 		} catch (Exception e) {
 			fail();
 		}
 	}
 	@Test
-	public void testMakeChoiceInvalid() {
+	public void testChipStatus() {
 		try {
-
-			try (InputStream in = new ByteArrayInputStream("2".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
-			}
+			assertThat(player.countChip()).isEqualTo(Player.INIT_CHIP_COUNT);
+			String status;
+			status = player.chipStatus();
+			assertThat(status).isEqualTo("総計： 100([10]10枚, [1]0枚)");
+			int bet;
+			bet = -14;
+			player.addChip(bet);
+			status = player.chipStatus();
+			assertThat(status).isEqualTo("総計： 86([10]8枚, [1]6枚)");
+			bet = -86;
+			player.addChip(bet);
+			status = player.chipStatus();
+			assertThat(status).isEqualTo("総計： 0([10]0枚, [1]0枚)");
 		} catch (Exception e) {
 			fail();
 		}
 	}
-	@Test
-	public void testMakeChoiceInvalid2() {
-		try {
 
-			try (InputStream in = new ByteArrayInputStream("a".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testBetChipOK() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("1".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int bet = player.betChip();
-
-				assertThat(bet).isEqualTo(1);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testBetChipOK2() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("20".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int bet = player.betChip();
-
-				assertThat(bet).isEqualTo(20);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testBetChipInvalid() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("0".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int bet = player.betChip();
-
-				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testBetChipInvalid2() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("21".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int bet = player.betChip();
-
-				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}	
-	@Test
-	public void testBetChipInvalid3() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("a".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int bet = player.betChip();
-
-				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testWillContinueGameOK() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("0".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_YES);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testWillContinueGameOK2() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("1".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_NO);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testWillContinueGameInvalid() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("2".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	@Test
-	public void testWillContinueGameInvalid2() {
-		try {
-
-			try (InputStream in = new ByteArrayInputStream("a".getBytes())) {
-				doReturn(in).when(player).getInputStream();
-
-				player.init();
-				int choice = player.makeChoice(Card.createCard(Card.Suit.CLUBS, 1));
-
-				assertThat(choice).isEqualTo(InteractivePlayer.CHOICE_INVALID);
-			}
-		} catch (Exception e) {
-			fail();
-		}
-	}
-	
 }

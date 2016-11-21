@@ -2,10 +2,10 @@ package jp.smaphonia;
 
 public abstract class AbstractPlayer implements Player {
 
-	Chip chip;
+	int chip;
 
 	AbstractPlayer() {
-		chip = new Chip();
+		chip = INIT_CHIP_COUNT;
 
 	}
 
@@ -55,40 +55,50 @@ public abstract class AbstractPlayer implements Player {
 	
 	@Override
 	public void addChip(int bet) {
-		chip.win(bet);
+		chip += bet;
+		if (chip < 0) {
+			chip = 0;
+		}
 	}
 
 	@Override
-	public int getChipCount() {
-		return chip.getCount();
-	}
-
-	@Override
-	public Chip getChip() {
+	public int countChip() {
 		return chip;
 	}
 
 	@Override
 	public boolean hasChip() {
-		return (chip.getCount() > 0);
+		return (chip > 0);
 	}
 	
 	@Override
 	public int betChip() {
 		try {
-			int bet = Integer.parseInt(getChipCountForBet());
+			int bet = Integer.parseInt(betChipCount());
 			if (bet < BET_MIN || bet > BET_MAX) {
 				return BET_INVALID;
 			}
-			if (bet > chip.getCount()) {
+			if (bet > chip) {
 				return BET_INVALID;
 			}
-			chip.lose(bet);
+			chip -= bet;
 			return bet;
 		} catch (NumberFormatException e) {
 			return BET_INVALID;
 		}
 	}
 
-	abstract String getChipCountForBet();
+	abstract String betChipCount();
+	
+	@Override
+	public String chipStatus() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("総計： " + chip)
+			   .append("(")
+			   .append("[10]" + chip / 10 + "枚")
+			   .append(", ")
+			   .append("[1]" + chip % 10 + "枚")
+			  .append(")");
+		return builder.toString();		
+	}
 }

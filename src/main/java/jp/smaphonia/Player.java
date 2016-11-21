@@ -1,7 +1,9 @@
 package jp.smaphonia;
 
 public interface Player {
-	
+	// 初期チップ数
+	static final int INIT_CHIP_COUNT = 100;
+
 	// 賭けるチップ数
 	static final int BET_MIN = 1;
 	static final int BET_MAX = 20;
@@ -21,8 +23,8 @@ public interface Player {
 	public int willPlayNewGame();
 	
 	public void addChip(int bet);
-	public int getChipCount();
-	public Chip getChip();
+	public int countChip();
 	public boolean hasChip();
 	public int betChip();
+	public String chipStatus();
 }

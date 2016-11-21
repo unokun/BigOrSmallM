@@ -175,7 +175,7 @@ public class BigOrSmallTest {
 			game.initGame();
 
 			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
+			int chipOrg = game.player.countChip();
 
 			// 小さいという選択
 			// 継続無し
@@ -185,7 +185,7 @@ public class BigOrSmallTest {
 			boolean result = game.playTurn(false);
 
 			assertThat(result).isEqualTo(false);
-			assertThat(game.player.getChipCount() - chipOrg).isEqualTo(2 * bet);
+			assertThat(game.player.countChip() - chipOrg).isEqualTo(2 * bet);
 		} catch (Exception e) {
 			fail();
 		}
@@ -216,7 +216,7 @@ public class BigOrSmallTest {
 			game.initGame();
 
 			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
+			int chipOrg = game.player.countChip();
 
 			// 小さいという選択
 			// 継続
@@ -226,7 +226,7 @@ public class BigOrSmallTest {
 			boolean result = game.playTurn(false);
 			
 			assertThat(result).isEqualTo(true);
-			assertThat(game.player.getChipCount() - chipOrg).isEqualTo(0);
+			assertThat(game.player.countChip() - chipOrg).isEqualTo(0);
 			assertThat(game.getBettingChips()).isEqualTo(2 * bet);
 			assertThat(game.getCardA()).isEqualTo(cardB);
 
@@ -257,7 +257,7 @@ public class BigOrSmallTest {
 			game.initGame();
 
 			// 勝負前のチップ数
-			int chipOrg = game.player.getChipCount();
+			int chipOrg = game.player.countChip();
 
 			// 小さいという選択
 			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
@@ -265,7 +265,7 @@ public class BigOrSmallTest {
 			boolean result = game.playTurn(true);
 			
 			assertThat(result).isEqualTo(false);
-			assertThat(game.player.getChipCount() - chipOrg).isEqualTo(2 * bet);
+			assertThat(game.player.countChip() - chipOrg).isEqualTo(2 * bet);
 		} catch (Exception e) {
 			fail();
 		}

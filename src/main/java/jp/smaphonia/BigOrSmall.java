@@ -123,14 +123,14 @@ public class BigOrSmall {
 
 	void printChipStatus() {
 		println("*****現在のチップ枚数*****");
-		println(player.getChip().toString());
+		println(player.chipStatus());
 		println("************************");
 
 	}
 
 	void printCardAndChipStatus(Card card) {
 		println("*****チップ枚数とカード*****");
-		println(player.getChip().toString());
+		println(player.chipStatus());
 		println("現在のカード：" + card);
 		println("************************");
 
@@ -347,7 +347,7 @@ public class BigOrSmall {
 			int won = getBettingChips() * 2;
 
 			printWinMessgae(won);
-			LOGGER.info("win: " + won + " chip = " + player.getChipCount());
+			LOGGER.info("win: " + won + " chip = " + player.countChip());
 
 			// 勝ったチップを使ってゲームを継続する
 			// 連続勝負最大数になっている場合には継続できない
@@ -366,7 +366,7 @@ public class BigOrSmall {
 		}
 
 		println("Lose...");
-		LOGGER.info("lose: " + getBettingChips() + " chip = " + player.getChipCount());
+		LOGGER.info("lose: " + getBettingChips() + " chip = " + player.countChip());
 
 		return false;
 	}
