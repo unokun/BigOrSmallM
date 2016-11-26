@@ -22,6 +22,9 @@ public class BigOrSmall {
 	@Option(name="-srnd", usage = "Set a smarter random player.")
 	boolean smarterRandomPlayer = false;
 
+	@Option(name="-g", usage = "Set a greedy player.")
+	boolean greedyPlayer = false;
+
 	Dealer dealer;
 	Player player;
 	
@@ -75,6 +78,8 @@ public class BigOrSmall {
 			player = new SmarterRandomChoicePlayer();
 		} else if (randomPlayer) {
 			player = new RandomChoicePlayer();
+		} else if (greedyPlayer) {
+			player = new GreedyPlayer();
 		} else {
 			player = new InteractivePlayer();
 			
@@ -181,13 +186,13 @@ public class BigOrSmall {
 	 * @param scanner
 	 * @return
 	 */
-	int getPlayerBet() {
+	int getPlayerBet(Card card) {
 		int bet = 0;
 		while (true) {
 			println("");
 			println("■BET枚数選択");
 			println("BETするチップ数を入力してください(最低1〜20枚)");
-			bet = player.betChip();
+			bet = player.betChip(card);
 			if (bet == InteractivePlayer.BET_INVALID) {
 				continue;
 			}
@@ -205,15 +210,16 @@ public class BigOrSmall {
 	 * @return
 	 */
 	int getPlayerChoice() {
+		Card cardA = getCardA();
 		println("■Big or Small選択");
-		println("現在のカード：" + getCardA());
+		println("現在のカード：" + cardA);
 
-		int choice = getYesNoChoice("[Big or Small]: 0: Big 1:Small");
+		int choice = makeChoice(cardA, "[Big or Small]: 0: Big 1:Small");
 
 		println("*****Big or Small*****");
 		println("BET数：" + getBettingChips());
 		print("あなたの選択：");
-		if (choice == InteractivePlayer.CHOICE_BIG) {
+		if (choice == Player.CHOICE_BIG) {
 			print("Big");
 		} else {
 			print("Small");
@@ -223,17 +229,41 @@ public class BigOrSmall {
 		LOGGER.info("choice: " + choice);
 		return choice;
 	}
+	private int makeChoice(Card card, String question) {
+		int choice = InteractivePlayer.CHOICE_INVALID;
+		while (true) {
+			println(question);
+			choice = player.makeChoice(card);
+			if (choice != InteractivePlayer.CHOICE_INVALID) {
+				break;
+			}
+			println("半角数字の0か1のみを入力してください");
 
+		}
+		return choice;
+	}
 	/**
 	 * 勝ったチップを使ってゲームを継続する?
 	 * 
 	 * @return
 	 */
-	boolean continueGame(int won) {
-		int choice = getYesNoChoice("[獲得したチップ" + won + "枚でBig or Smallを続けますか？]: 0: Yes 1:No");
+	boolean continueGame(Card card, int won) {
+		int choice = willContinueGame(card, "[獲得したチップ" + won + "枚でBig or Smallを続けますか？]: 0: Yes 1:No");
 		return (choice == InteractivePlayer.CHOICE_YES);
 	}
+	private int willContinueGame(Card card, String question) {
+		int choice = InteractivePlayer.CHOICE_INVALID;
+		while (true) {
+			println(question);
+			choice = player.willContinueGame(card);
+			if (choice != InteractivePlayer.CHOICE_INVALID) {
+				break;
+			}
+			println("半角数字の0か1のみを入力してください");
 
+		}
+		return choice;
+	}
 	/**
 	 * 新しいゲームとして続けるかどうか？
 	 * 
@@ -241,16 +271,16 @@ public class BigOrSmall {
 	 * @param scanner
 	 * @return
 	 */
-	boolean playNewGame() {
-		int choice = getYesNoChoice("[ゲームを続けますか？]: 0: Yes 1:No");
+	boolean playNewGame(Card card) {
+		int choice = willPlayNewGame(card, "[ゲームを続けますか？]: 0: Yes 1:No");
 		return (choice == InteractivePlayer.CHOICE_YES);
 	}
 
-	private int getYesNoChoice(String question) {
+	private int willPlayNewGame(Card card, String question) {
 		int choice = InteractivePlayer.CHOICE_INVALID;
 		while (true) {
 			println(question);
-			choice = player.willPlayNewGame();
+			choice = player.willPlayNewGame(card);
 			if (choice != InteractivePlayer.CHOICE_INVALID) {
 				break;
 			}
@@ -302,7 +332,7 @@ public class BigOrSmall {
 
 			// 賭けられているチップ枚数
 			// 最初はPlayerが選択する
-			int bet = getPlayerBet();
+			int bet = getPlayerBet(cardA);
 			setBettingChips(bet);
 			LOGGER.info("bet: " + bet);
 
@@ -316,8 +346,12 @@ public class BigOrSmall {
 
 			printChipStatus();
 
+			if (player.countChip() > 1000) {
+				return;
+			}
+			
 			// ゲームを継続するかどうか
-			if (!playNewGame()) {
+			if (!playNewGame(cardA)) {
 				return;
 			}
 			LOGGER.info("continue as new game.");
@@ -351,7 +385,7 @@ public class BigOrSmall {
 
 			// 勝ったチップを使ってゲームを継続する
 			// 連続勝負最大数になっている場合には継続できない
-			if (lastTurn || !continueGame(won)) {
+			if (lastTurn || !continueGame(cardB, won)) {
 				// 継続しない場合、場にあるチップをもらって、連続勝負ループを抜ける
 				player.addChip(won);
 				return false;

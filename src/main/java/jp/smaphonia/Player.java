@@ -19,12 +19,12 @@ public interface Player {
 	public void init();
 	
 	public int makeChoice(Card card);
-	public int willContinueGame();
-	public int willPlayNewGame();
+	public int willContinueGame(Card card);
+	public int willPlayNewGame(Card card);
 	
 	public void addChip(int bet);
 	public int countChip();
 	public boolean hasChip();
-	public int betChip();
+	public int betChip(Card card);
 	public String chipStatus();
 }

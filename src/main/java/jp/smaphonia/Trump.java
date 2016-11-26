@@ -4,6 +4,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Random;
 
+import org.kohsuke.args4j.Option;
+
 public class Trump {
 	public static int TOTAL_CARD = 4 * Card.NUM_OF_CARDS;
 
@@ -64,8 +66,8 @@ public class Trump {
 		return this.deck.size();
 	}
 
-//	@Option(name="-i", usage = "Set an interactive player[default].")
-//	public void test() {
-//		
-//	}
+	@Option(name="-i", usage = "Set an interactive player[default].")
+	public void test() {
+		
+	}
 }

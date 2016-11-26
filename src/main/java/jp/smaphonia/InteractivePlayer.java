@@ -36,7 +36,7 @@ public class InteractivePlayer extends AbstractPlayer {
 	}
 
 	@Override
-	String betChipCount() {
+	String betChipCount(Card card) {
 		return getFromStandardInput();
 	}
 

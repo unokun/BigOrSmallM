@@ -100,8 +100,10 @@ public class InteractivePlayerTest {
 			try (InputStream in = new ByteArrayInputStream("1".getBytes())) {
 				doReturn(in).when(player).getInputStream();
 
+				Card cardA = Card.createCard(4);
+
 				player.init();
-				int bet = player.betChip();
+				int bet = player.betChip(cardA);
 
 				assertThat(bet).isEqualTo(1);
 			}
@@ -116,8 +118,10 @@ public class InteractivePlayerTest {
 			try (InputStream in = new ByteArrayInputStream("20".getBytes())) {
 				doReturn(in).when(player).getInputStream();
 
+				Card cardA = Card.createCard(4);
+
 				player.init();
-				int bet = player.betChip();
+				int bet = player.betChip(cardA);
 
 				assertThat(bet).isEqualTo(20);
 			}
@@ -131,9 +135,10 @@ public class InteractivePlayerTest {
 
 			try (InputStream in = new ByteArrayInputStream("0".getBytes())) {
 				doReturn(in).when(player).getInputStream();
+				Card cardA = Card.createCard(4);
 
 				player.init();
-				int bet = player.betChip();
+				int bet = player.betChip(cardA);
 
 				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}
@@ -147,9 +152,10 @@ public class InteractivePlayerTest {
 
 			try (InputStream in = new ByteArrayInputStream("21".getBytes())) {
 				doReturn(in).when(player).getInputStream();
+				Card cardA = Card.createCard(4);
 
 				player.init();
-				int bet = player.betChip();
+				int bet = player.betChip(cardA);
 
 				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}
@@ -163,9 +169,10 @@ public class InteractivePlayerTest {
 
 			try (InputStream in = new ByteArrayInputStream("a".getBytes())) {
 				doReturn(in).when(player).getInputStream();
+				Card cardA = Card.createCard(4);
 
 				player.init();
-				int bet = player.betChip();
+				int bet = player.betChip(cardA);
 
 				assertThat(bet).isEqualTo(InteractivePlayer.BET_INVALID);
 			}

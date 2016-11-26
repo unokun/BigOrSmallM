@@ -4,7 +4,6 @@ import static org.junit.Assert.fail;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,15 +61,15 @@ public class TrumpTest {
 		}
 	}
 
-//	@Test
-//	public void test() {
-//		try {
-//			// @Option
-//			Method method = Trump.class.getDeclaredMethod("test");
-//			for (Annotation annotation : method.getAnnotations()) {
-//				System.out.println(annotation);
-//			}
-//			
+	@Test
+	public void test() {
+		try {
+			// @Option
+			Method method = Trump.class.getDeclaredMethod("test");
+			for (Annotation annotation : method.getAnnotations()) {
+				System.out.println(annotation);
+			}
+			
 //			for (Method m : Trump.class.getMethods()) {
 //				System.out.println("name: " + m.getName());
 //				System.out.println("return type: " + m.getReturnType());
@@ -79,8 +78,8 @@ public class TrumpTest {
 //					System.out.println("type: " + p.getType());
 //				}
 //			}
-//		} catch (Exception e) {
-//			fail();
-//		}
-//	}
+		} catch (Exception e) {
+			fail();
+		}
+	}
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -15,6 +16,7 @@ import java.io.PrintStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.matchers.Any;
 
 public class BigOrSmallTest {
 
@@ -58,7 +60,19 @@ public class BigOrSmallTest {
 
 		}
 	}
-	
+	@Test
+	public void testGreedyPlayGame() {
+		try {
+			Player player = new GreedyPlayer();
+			player.init();
+			doReturn(player).when(game).makePlayer();
+
+			game.playGame();
+		} catch (Exception e) {
+			fail();
+
+		}
+	}	
 	@Test
 	// チップがなくなって終了
 	public void testPlayGame() {
@@ -92,9 +106,9 @@ public class BigOrSmallTest {
 				doReturn(dealer).when(game).makeDealer();
 
 				int bet = 10;
-				doReturn(bet).when(game).getPlayerBet();
+				doReturn(bet).when(game).getPlayerBet(any(Card.class));
 				doReturn(false).when(game).playTurn(anyBoolean());
-				doReturn(false).when(game).playNewGame();
+				doReturn(false).when(game).playNewGame(Card.createCard(1));
 
 				game.playGame();
 
@@ -119,9 +133,9 @@ public class BigOrSmallTest {
 				doReturn(dealer).when(game).makeDealer();
 
 				int bet = 10;
-				doReturn(bet).when(game).getPlayerBet();
+				doReturn(bet).when(game).getPlayerBet(any(Card.class));
 				doReturn(true).when(game).playTurn(anyBoolean());
-				doReturn(false).when(game).playNewGame();
+				doReturn(false).when(game).playNewGame(Card.createCard(1));
 
 				game.playGame();
 
@@ -180,7 +194,7 @@ public class BigOrSmallTest {
 			// 小さいという選択
 			// 継続無し
 			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
-			doReturn(false).when(game).continueGame(anyInt());
+			doReturn(false).when(game).continueGame(any(Card.class), anyInt());
 
 			boolean result = game.playTurn(false);
 
@@ -221,7 +235,7 @@ public class BigOrSmallTest {
 			// 小さいという選択
 			// 継続
 			doReturn(InteractivePlayer.CHOICE_SMALL).when(game).getPlayerChoice();
-			doReturn(true).when(game).continueGame(anyInt());
+			doReturn(true).when(game).continueGame(any(Card.class), anyInt());
 
 			boolean result = game.playTurn(false);
 			

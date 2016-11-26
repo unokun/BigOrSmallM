@@ -13,7 +13,7 @@ public class RandomChoicePlayer extends AbstractPlayer {
 	}
 
 	@Override
-	String betChipCount() {
+	String betChipCount(Card card) {
 		return String.valueOf((int)(Math.random() * 19 + 1));
 	}
 

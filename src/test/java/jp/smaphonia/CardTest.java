@@ -104,14 +104,16 @@ public class CardTest {
 	public void testScanner() {
 		try {
 			try (InputStream in = new ByteArrayInputStream("test".getBytes()); Scanner scanner = new Scanner(in)) {
-				String input = scanner.next();
-				System.out.println(input);
+//				String input = scanner.next();
+				System.out.println(scanner.next());
+//				System.out.println(scanner.next());
 			}
 			
 		} catch (Exception e) {
 			fail();
 		}
 	}
+
 //	public void aaa() {
 //		// ディラーがゲームの初期化をします
 //		

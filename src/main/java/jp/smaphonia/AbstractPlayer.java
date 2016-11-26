@@ -30,16 +30,16 @@ public abstract class AbstractPlayer implements Player {
 	abstract String getBigSmallChoice(Card card);
 
 	@Override
-	public int willContinueGame() {
-		return makeYesNoChoice();
+	public int willContinueGame(Card card) {
+		return makeYesNoChoice(card);
 	}
 
 	@Override
-	public int willPlayNewGame() {
-		return makeYesNoChoice();
+	public int willPlayNewGame(Card card) {
+		return makeYesNoChoice(card);
 	}
 
-	int makeYesNoChoice() {
+	int makeYesNoChoice(Card card) {
 		try {
 			int choice = Integer.parseInt(getYesNoChoice());
 			if (choice != CHOICE_YES && choice != CHOICE_NO) {
@@ -72,9 +72,9 @@ public abstract class AbstractPlayer implements Player {
 	}
 	
 	@Override
-	public int betChip() {
+	public int betChip(Card card) {
 		try {
-			int bet = Integer.parseInt(betChipCount());
+			int bet = Integer.parseInt(betChipCount(card));
 			if (bet < BET_MIN || bet > BET_MAX) {
 				return BET_INVALID;
 			}
@@ -88,7 +88,7 @@ public abstract class AbstractPlayer implements Player {
 		}
 	}
 
-	abstract String betChipCount();
+	abstract String betChipCount(Card card);
 	
 	@Override
 	public String chipStatus() {

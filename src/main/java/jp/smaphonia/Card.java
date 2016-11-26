@@ -31,8 +31,12 @@ public class Card {
 	
 	// http://qiita.com/KeithYokoma/items/9681b130ea132cfad64d
 	public enum Suit {
-		SPADES(SUIT_ID_SPADE, SUIT_NAME_SPADE), HEARTS(SUIT_ID_HEART, SUIT_NAME_HEART), DIAMONDS(SUIT_ID_DIAMOND, SUIT_NAME_DIAMOND),
-		CLUBS(SUIT_ID_CLUB, SUIT_NAME_CLUB), JOKER(SUIT_ID_JOKER, SUIT_NAME_JOKER), UNKNOWN(SUIT_ID_UNKNOWN, SUIT_NAME_UNKNOWN); 
+		SPADES(SUIT_ID_SPADE, SUIT_NAME_SPADE),
+		HEARTS(SUIT_ID_HEART, SUIT_NAME_HEART),
+		DIAMONDS(SUIT_ID_DIAMOND, SUIT_NAME_DIAMOND),
+		CLUBS(SUIT_ID_CLUB, SUIT_NAME_CLUB),
+		JOKER(SUIT_ID_JOKER, SUIT_NAME_JOKER),
+		UNKNOWN(SUIT_ID_UNKNOWN, SUIT_NAME_UNKNOWN); 
 		
 		private final int id;
 		private final String name;
@@ -117,6 +121,10 @@ public class Card {
 		return Card.Suit.valueOf(id);
 	}
 
+	int getValue() {
+		return suit.getId() + number * 4;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
