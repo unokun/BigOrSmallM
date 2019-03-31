@@ -1,6 +1,13 @@
 # BigOrSmallM
 
+### 設計
+
+[フローチャート](https://www.draw.io/#G1UNRBiwGwwzASH2E-TIJydDOiFI3oFesx)
+
+[クラス設計](docs/design_class.md)
+
 ## maven
+
 ### jarファイルを作成する
 
 依存ライブラリ(jar)を含むパッケージ(jar)ファイルを作成する。
